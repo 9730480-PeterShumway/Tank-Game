@@ -17,6 +17,11 @@ void setup () {
 
 void draw () {
   background(bg);
+  for (int i = 0; i < projectiles.size(); i++) {
+    Projectile part = projectiles.get(i);
+    part.display();
+    part.move();
+  }
   t1.display();
   o1.display();
   o1.move();
@@ -40,7 +45,7 @@ void keyPressed() {
 }
 
 void mousePressed() {
-  projectiles.add(new Projectile(t1.x,t1.y,4,10));
+  projectiles.add(new Projectile(t1.x, t1.y, 10, 5));
 }
 
 

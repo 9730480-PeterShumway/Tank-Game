@@ -13,8 +13,8 @@ class Projectile {
   }
 
   void display() {
-    fill(127,0,0);
-    rect(x,y,w,h);
+    fill(127, 0, 0);
+    rect(x, y, w, h);
   }
 
   void move() {
@@ -22,6 +22,6 @@ class Projectile {
   }
 
 
-void fire() {
-}
+  void fire() {
+  }
 }
