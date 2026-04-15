@@ -1,10 +1,13 @@
 // 1 April 2026 | TankGame | Peter Shumway
 Tank t1;
+ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 Obstacle o1, o2, o3;
 PImage bg;
+int score;
 
 void setup () {
   size(500, 500);
+  score = 0;
   bg = loadImage("tg.png");
   t1 = new Tank();
   o1 = new Obstacle(400, 100, 100, 50, 1, 100);
@@ -21,6 +24,7 @@ void draw () {
   o2.move();
   o3.display();
   o3.move();
+  scorePanel();
 }
 
 void keyPressed() {
@@ -33,4 +37,19 @@ void keyPressed() {
   } else if (key == 'd') {
     t1.move('d');
   }
+}
+
+void mousePressed() {
+  projectiles.add(new Projectile(t1.x,t1.y,4,10));
+}
+
+
+void scorePanel() {
+  fill(127, 50);
+  rectMode(CENTER);
+  rect(width/2, 15, width, 30);
+  fill(1);
+  textSize(30);
+  textAlign(CENTER);
+  text("Score:" + score, width/2, 25);
 }
