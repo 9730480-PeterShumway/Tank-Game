@@ -45,7 +45,18 @@ void keyPressed() {
 }
 
 void mousePressed() {
-  projectiles.add(new Projectile(t1.x, t1.y, 10, 5));
+  float dx = mouseX - t1.x;
+  float dy = mouseY - t1.y;
+  float mag = sqrt(dx*dx + dy*dy);
+
+  if (mag > 0) {
+    dx /= mag;
+    dy /= mag;
+
+    
+    
+    projectiles.add(new Projectile(t1.x, t1.y, 10, 5));
+  }
 }
 
 
