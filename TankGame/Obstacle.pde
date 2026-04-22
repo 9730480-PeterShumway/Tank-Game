@@ -19,16 +19,22 @@ class Obstacle {
   void display() {
     fill(127);
     imageMode(CENTER);
-    image(obs1,x,y);
+    image(obs1, x, y);
   }
 
   void move() {
     x=x+speed;
-    if(x>width){
-    x = 0;
+    if (x>width) {
+      x = 0;
     }
   }
-
+  boolean offScreen() {
+    if (x < 0-w/2 || x > width+w/2 || y < 0-w/2 || y> height+w/2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   void fire() {
   }
 }

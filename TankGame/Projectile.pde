@@ -23,10 +23,22 @@ class Projectile {
 
   void move() {
     x += vx;
-    y+= vy;
+    y += vy;
   }
 
-
-  void fire() {
+  boolean intersect(Obstacle o) {
+    float distance = dist(x, y, o.x, o.y);
+    if (distance < (w/2 +o.w/2)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  boolean offScreen() {
+    if (x < 0-w/2 || x > width+w/2 || y < 0-w/2 || y> height+w/2) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -1,34 +1,67 @@
 // 1 April 2026 | TankGame | Peter Shumway
 Tank t1;
 ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-Obstacle o1, o2, o3;
+ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+//Obstacle o1, o2, o3;
 PImage bg;
 int score;
+Timer objTimer;
 
 void setup () {
   size(500, 500);
   score = 0;
   bg = loadImage("tg.png");
   t1 = new Tank();
-  o1 = new Obstacle(400, 100, 100, 50, 1, 100);
-  o2 = new Obstacle(400, 300, 100, 50, 1, 100);
-  o3 = new Obstacle(400, 450, 100, 50, 1, 100);
+  //o1 = new Obstacle(400, 100, 100, 50, 1, 100);
+  //o2 = new Obstacle(400, 300, 100, 50, 1, 100);
+  //o3 = new Obstacle(400, 450, 100, 50, 1, 100);
+  objTimer = new Timer(1000);
+  objTimer.start();
 }
 
 void draw () {
   background(bg);
+
+  // Distrubute object on timer
+  if (objTimer.isFinished()) {
+    // add object
+    obstacles.add(new Obstacle(0, random(height), 100, 100, random(2, 5), 10));
+    //restart timer
+    objTimer.start();
+  }
+  //gets rid of bullets i think
+  for (int i = 0; i <obstacles.size(); i++) {
+    Obstacle o = obstacles.get(i);
+    o.display();
+    o.move();
+    if (o.offScreen()) {
+      obstacles.remove(i);
+    }
+  }
+  //  Render and detect collision
   for (int i = 0; i < projectiles.size(); i++) {
-    Projectile part = projectiles.get(i);
-    part.display();
-    part.move();
+    Projectile p = projectiles.get(i);
+    for (int j = 0; j <obstacles.size(); j++) {
+      Obstacle o = obstacles.get(j);
+      if (p.intersect(o)) {
+        score = score += 100;
+        projectiles.remove(i);
+        obstacles.remove(j);
+      }
+    }
+    p.display();
+    p.move();
+    if(p.offScreen()) {
+      projectiles.remove(i);
+    }
   }
   t1.display();
-  o1.display();
-  o1.move();
-  o2.display();
-  o2.move();
-  o3.display();
-  o3.move();
+  //o1.display();
+ //o1.move();
+  //o2.display();
+  //o2.move();
+ //o3.display();
+  //o3.move();
   scorePanel();
 }
 
@@ -52,10 +85,10 @@ void mousePressed() {
   if (mag > 0) {
     dx /= mag;
     dy /= mag;
+    float speed = 5;
 
-    
-    
-    projectiles.add(new Projectile(t1.x, t1.y, 10, 5));
+
+    projectiles.add(new Projectile(t1.x, t1.y, dx * speed, dy * speed));
   }
 }
 
