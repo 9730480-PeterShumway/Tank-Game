@@ -19,7 +19,16 @@ int hitCooldown = 500; // milliseconds
     tankW = loadImage("tankW.png");
     idir = 'w';
   }
+void takeDamage(float dmg) {
+  if (millis() - lastHitTime > hitCooldown) {
+    health -= dmg;
+    lastHitTime = millis();
 
+    if (health < 0) {
+      health = 0;
+    }
+  }
+}
   void display() {
     imageMode(CENTER);
     //image(iTank,x,y);

@@ -2,12 +2,18 @@
 Tank t1;
 ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+ArrayList<PowerUp> powerups = new ArrayList<PowerUp>();
 //Obstacle o1, o2, o3;
 PImage bg;
 int score;
-Timer objTimer;
+Timer objTimer, puTimer;
+ArrayList<PowerUp> powerUps;
+Timer powerTimer;
 
 void setup () {
+  powerUps = new ArrayList<PowerUp>();
+  powerTimer = new Timer(5000); // spawn every 5 seconds
+  powerTimer.start();
   size(500, 500);
   score = 0;
   bg = loadImage("tg.png");
@@ -21,47 +27,62 @@ void setup () {
 
 void draw () {
   background(bg);
+  if (powerTimer.isFinished()) {
+    powerUps.add(new PowerUp(30, 30));
+    powerTimer.start();
+  }
 
-  // Distrubute object on timer
+  for (int i = powerUps.size() - 1; i >= 0; i--) {
+    PowerUp p = powerUps.get(i);
+
+    p.move();
+    p.display();
+
+    if (p.intersects(t1)) {
+      p.applyEffect(t1);
+      powerUps.remove(i);
+    } else if (p.offScreen()) {
+      powerUps.remove(i);
+    }
+  }
   if (objTimer.isFinished()) {
-    // add object
-    obstacles.add(new Obstacle(0, random(height), 100, 100, random(2, 5), 10));
-    //restart timer
+    obstacles.add(new Obstacle(0, random(height), 100, 100, random(2, 5), 5));
     objTimer.start();
   }
-  //gets rid of bullets i think
-  for (int i = 0; i <obstacles.size(); i++) {
+
+  for (int i = 0; i < obstacles.size(); i++) {
     Obstacle o = obstacles.get(i);
     o.display();
     o.move();
+     if (t1.intersect(o)) {
+  t1.takeDamage(10);
+}
     if (o.offScreen()) {
       obstacles.remove(i);
     }
   }
-  //  Render and detect collision
   for (int i = 0; i < projectiles.size(); i++) {
     Projectile p = projectiles.get(i);
-    for (int j = 0; j <obstacles.size(); j++) {
+
+    for (int j = 0; j < obstacles.size(); j++) {
       Obstacle o = obstacles.get(j);
       if (p.intersect(o)) {
-        score = score += 100;
+        score += 100;
         projectiles.remove(i);
         obstacles.remove(j);
+        break; 
       }
     }
+
     p.display();
     p.move();
-    if(p.offScreen()) {
+   
+
+    if (p.offScreen()) {
       projectiles.remove(i);
     }
   }
   t1.display();
-  //o1.display();
- //o1.move();
-  //o2.display();
-  //o2.move();
- //o3.display();
-  //o3.move();
   scorePanel();
 }
 
@@ -85,7 +106,7 @@ void mousePressed() {
   if (mag > 0) {
     dx /= mag;
     dy /= mag;
-    float speed = 5;
+    float speed = 10;
 
 
     projectiles.add(new Projectile(t1.x, t1.y, dx * speed, dy * speed));
@@ -101,4 +122,5 @@ void scorePanel() {
   textSize(30);
   textAlign(CENTER);
   text("Score:" + score, width/2, 25);
+  text("Health: " + t1.health, width/2, 55);
 }
